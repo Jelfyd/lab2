@@ -1,0 +1,8 @@
+/vendor/
+.env.local
+.env.*.local
+/var/*
+!/var/.gitkeep
+/public/bundles/
+__pycache__/
+*.py[cod]
