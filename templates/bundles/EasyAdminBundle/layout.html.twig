@@ -1,0 +1,31 @@
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block user_menu %}
+    {% if ea.userMenu.items|length > 0 %}
+        <twig:ea:ActionMenu:ActionList:Divider/>
+
+        {% for item in ea.userMenu.items %}
+            {% if item.isMenuSection %}
+                {% if not loop.first %}
+                    <twig:ea:ActionMenu:ActionList:Divider/>
+                {% endif %}
+
+                <twig:ea:ActionMenu:ActionList:Header
+                    label="{{ item.label|trans }}"
+                    class="{{ item.cssClass }}"
+                    icon="{{ item.icon }}"
+                />
+            {% else %}
+                <twig:ea:ActionMenu:ActionList:Item
+                    label="{{ item.label|trans }}"
+                    class="user-action {{ item.cssClass }}"
+                    icon="{{ item.icon }}"
+                    url="{{ item.linkUrl }}"
+                    target="{{ item.linkTarget }}"
+                    rel="{{ item.linkRel }}"
+                    referrerpolicy="origin-when-cross-origin"
+                />
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}

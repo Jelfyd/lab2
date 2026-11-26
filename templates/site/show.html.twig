@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ object.name }} · Космос поруч{% endblock %}
+
+{% block body %}
+    <a class="back" href="{{ path('site_index') }}">← До каталогу</a>
+    <article class="detail">
+        <span class="tag">{{ object.category.name }}</span>
+        <h1>{{ object.name }}</h1>
+        <p class="lead">{{ object.description }}</p>
+        <dl class="facts">
+            {% if object.diameterKm is not null %}
+                <div><dt>Діаметр</dt><dd>{{ object.diameterKm|number_format(0, ',', ' ') }} км</dd></div>
+            {% endif %}
+            {% if object.distanceFromSunMillionKm is not null %}
+                <div><dt>Відстань від Сонця</dt><dd>{{ object.distanceFromSunMillionKm|number_format(1, ',', ' ') }} млн км</dd></div>
+            {% endif %}
+        </dl>
+        <aside class="fact"><strong>Цікавий факт</strong><p>{{ object.funFact }}</p></aside>
+    </article>
+{% endblock %}

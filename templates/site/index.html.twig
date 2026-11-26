@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Каталог космічних об’єктів{% endblock %}
+
+{% block body %}
+    <section class="hero">
+        <div class="hero-copy">
+            <p class="eyebrow"><span class="eyebrow-line"></span> Маленький довідник великого Всесвіту</p>
+            <h1>Космос ближче,<br><span>ніж здається.</span></h1>
+            <p>Знайомся з планетами, супутниками та апаратами, що досліджують далекі світи.</p>
+            <a class="hero-link" href="#catalog">Дослідити каталог <span aria-hidden="true">↓</span></a>
+            <div class="hero-stats">
+                <div><strong>{{ totalObjectCount }}</strong><span>об’єктів</span></div>
+                <span class="stats-divider" aria-hidden="true"></span>
+                <div><strong>{{ categories|length }}</strong><span>категорії</span></div>
+                <span class="stats-note">і цілий Всесвіт для відкриттів</span>
+            </div>
+        </div>
+        <div class="orbit-art" aria-hidden="true">
+            <span class="orbit orbit-one"></span>
+            <span class="orbit orbit-two"></span>
+            <span class="orbit orbit-three"></span>
+            <span class="orbit-planet"></span>
+            <span class="orbit-moon"></span>
+            <span class="orbit-spark spark-one">✦</span>
+            <span class="orbit-spark spark-two">✧</span>
+            <span class="orbit-spark spark-three">·</span>
+        </div>
+    </section>
+
+    {% if dailyObject %}
+        <section class="daily-pick" aria-labelledby="daily-pick-title">
+            <div class="daily-pick-mark" aria-hidden="true">✦</div>
+            <div class="daily-pick-content">
+                <p class="eyebrow"><span class="eyebrow-line"></span> В центрі уваги · {{ 'now'|date('d.m.Y') }}</p>
+                <h2 id="daily-pick-title">
+                    <a href="{{ path('site_show', {id: dailyObject.id}) }}">{{ dailyObject.name }}</a>
+                </h2>
+                <span class="tag">{{ dailyObject.category.name }}</span>
+                <p>{{ dailyObject.funFact }}</p>
+                <a class="more" href="{{ path('site_show', {id: dailyObject.id}) }}">Дізнатися більше <span aria-hidden="true">→</span></a>
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="catalog-section" id="catalog" aria-labelledby="catalog-title">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow"><span class="eyebrow-line"></span> Твоя наступна зупинка</p>
+                <h2 id="catalog-title">Досліджуй каталог<span class="heading-period">.</span></h2>
+            </div>
+            <p>Обери об’єкт, щоб відкрити більше цікавого про нього.</p>
+        </div>
+
+        <form class="search" method="get" action="{{ path('site_index') }}">
+            <label class="sr-only" for="search">Пошук за назвою, описом або категорією</label>
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="search" type="search" name="q" value="{{ search }}" placeholder="Пошук об’єкта…">
+            <label class="sr-only" for="category">Фільтр за категорією</label>
+            <select id="category" name="category">
+                <option value="">Усі категорії</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {{ selectedCategoryId == category.id ? 'selected' }}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit">Знайти <span aria-hidden="true">→</span></button>
+            {% if search or selectedCategoryId %}<a href="{{ path('site_index') }}">Очистити</a>{% endif %}
+        </form>
+
+        <p class="result-count"><span class="result-dot"></span> Знайдено об’єктів: <strong>{{ objects|length }}</strong></p>
+
+        <div class="cards" aria-label="Космічні об’єкти">
+        {% for object in objects %}
+            <article class="card">
+                <div class="card-topline">
+                    <span class="tag">{{ object.category.name }}</span>
+                    <span class="card-index">№ {{ '%02d'|format(loop.index) }}</span>
+                </div>
+                <h3><a href="{{ path('site_show', {id: object.id}) }}">{{ object.name }}</a></h3>
+                <p>{{ object.description }}</p>
+                <a class="more" href="{{ path('site_show', {id: object.id}) }}">Докладніше <span aria-hidden="true">↗</span></a>
+            </article>
+        {% else %}
+            <p class="empty">За цими умовами об’єктів не знайдено. Спробуй змінити пошук або категорію.</p>
+        {% endfor %}
+        </div>
+    </section>
+{% endblock %}
